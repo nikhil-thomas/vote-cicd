@@ -1,0 +1,11 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: vote-cicd-eventlistener
+spec:
+  port:
+    targetPort: 8080
+  to:
+    kind: Service
+    name: el-votecicd-listener
+    weight: 100

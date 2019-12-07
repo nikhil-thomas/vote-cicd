@@ -1,0 +1,11 @@
+apiVersion: tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: votecicd-listener
+spec:
+  serviceAccountName: tekton-triggers-sa
+  triggers:
+  - binding:
+      name: vote-cicd-pipelinebinding
+    template:
+      name: vote-cicd-triggertemplate

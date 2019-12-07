@@ -1,0 +1,25 @@
+apiVersion: tekton.dev/v1alpha1
+kind: TaskRun
+metadata:
+  name: create-ui-repo-webhook-run
+spec:
+  taskRef:
+    name: create-webhook
+  inputs:
+    params:
+    - name: GitHubOrg
+      value: "nikhil-thomas"
+    - name: GitHubUser
+      value: "nikhil-thomas"
+    - name: GitHubRepo
+      value: "vote-ui"
+    - name: GitHubSecretName
+      value: webhook-secret
+    - name: GitHubAccessTokenKey
+      value: token
+    - name: GitHubSecretStringKey
+      value: secret
+    - name: ExternalDomain
+      value: http://vote-cicd-eventlistener-vote-cicd.apps.ci-ln-ivcg1sb-d5d6b.origin-ci-int-aws.dev.rhcloud.com
+  timeout: 1000s
+  serviceAccount: tekton-triggers-createwebhook
