@@ -1,0 +1,17 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineRun
+metadata:
+  name: build-deploy-ui-pipelinerun
+spec:
+  pipelineRef:
+    name: build-and-deploy
+  resources:
+  - name: my-source-repo
+    resourceRef:
+      name: vote-ui-repo
+  - name: my-image-resource
+    resourceRef:
+      name: vote-ui-image
+  params:
+  - name: deployment-name
+    value: vote-ui

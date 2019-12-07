@@ -1,0 +1,9 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: vote-ui-repo
+spec:
+  type: git
+  params:
+  - name: url
+    value: https://github.com/nikhil-thomas/vote-ui.git

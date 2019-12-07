@@ -1,0 +1,172 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: build-and-deploy
+spec:
+  resources:
+  - name: my-source-repo
+    type: git
+  - name: my-image-resource
+    type: image
+  params:
+  - name: deployment-name
+    description: name of the deployment to be patched
+  tasks:
+  - name: build-image
+    taskRef:
+      name: buildah
+      kind: ClusterTask
+    resources:
+      inputs:
+      - name: source
+        resource: my-source-repo
+      outputs:
+      - name: image
+        resource: my-image-resource
+    params:
+    - name: TLSVERIFY
+      value: "false"
+  - name: create-upate-deployment
+    taskRef:
+      name: oc-apply-deployment
+    resources:
+      inputs:
+      - name: k8s-yamls-repo
+        resource: my-source-repo
+      - name: new-image
+        resource: my-image-resource
+    params:
+    - name: deployment-name
+      value: $(params.deployment-name)
+    runAfter:
+    - build-image
+
+#
+#
+#
+#
+#  - name: apply-api-manifests
+#    taskRef:
+#      name: apply-manifests
+#    resources:
+#      inputs:
+#      - name: source
+#        resource: api-repo
+#    runAfter:
+#    - build-api
+#
+#  - name: update-api-image
+#    taskRef:
+#      name: update-deployment
+#    resources:
+#      inputs:
+#      - name: image
+#        resource: api-image
+#    params:
+#    - name: deployment
+#      value: "api"
+#    runAfter:
+#    - apply-api-manifests
+#
+#  - name: build-ui
+#    taskRef:
+#      name: s2i-python-3
+#      kind: ClusterTask
+#    resources:
+#      inputs:
+#      - name: source
+#        resource: ui-repo
+#      outputs:
+#      - name: image
+#        resource: ui-image
+#    params:
+#    - name: TLSVERIFY
+#      value: "false"
+#
+#  - name: apply-ui-manifests
+#    taskRef:
+#      name: apply-manifests
+#    resources:
+#      inputs:
+#      - name: source
+#        resource: ui-repo
+#    runAfter:
+#    - build-ui
+#    - update-api-image
+#
+#  - name: update-ui-image
+#    taskRef:
+#      name: update-deployment
+#    resources:
+#      inputs:
+#      - name: image
+#        resource: ui-image
+#    params:
+#    - name: deployment
+#      value: "ui"
+#    runAfter:
+#    - apply-ui-manifestsn
+#
+#
+#
+#  - name: apply-api-manifests
+#    taskRef:
+#      name: apply-manifests
+#    resources:
+#      inputs:
+#      - name: source
+#        resource: api-repo
+#    runAfter:
+#    - build-api
+#
+#  - name: update-api-image
+#    taskRef:
+#      name: update-deployment
+#    resources:
+#      inputs:
+#      - name: image
+#        resource: api-image
+#    params:
+#    - name: deployment
+#      value: "api"
+#    runAfter:
+#    - apply-api-manifests
+#
+#  - name: build-ui
+#    taskRef:
+#      name: s2i-python-3
+#      kind: ClusterTask
+#    resources:
+#      inputs:
+#      - name: source
+#        resource: ui-repo
+#      outputs:
+#      - name: image
+#        resource: ui-image
+#    params:
+#    - name: TLSVERIFY
+#      value: "false"
+#
+#  - name: apply-ui-manifests
+#    taskRef:
+#      name: apply-manifests
+#    resources:
+#      inputs:
+#      - name: source
+#        resource: ui-repo
+#    runAfter:
+#    - build-ui
+#    - update-api-image
+#
+#  - name: update-ui-image
+#    taskRef:
+#      name: update-deployment
+#    resources:
+#      inputs:
+#      - name: image
+#        resource: ui-image
+#    params:
+#    - name: deployment
+#      value: "ui"
+#    runAfter:
+#    - apply-ui-manifestsn
