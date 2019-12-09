@@ -17,7 +17,7 @@ spec:
   - apiVersion: tekton.dev/v1alpha1
     kind: PipelineResource
     metadata:
-      name: source-repo-$(uid)
+      name: source-repo-$(params.gitrepositoryname)-$(uid)
       namespace: $(params.namespace)
     spec:
       type: git
@@ -29,7 +29,7 @@ spec:
   - apiVersion: tekton.dev/v1alpha1
     kind: PipelineResource
     metadata:
-      name: image-source-$(uid)
+      name: image-source-$(params.gitrepositoryname)-$(uid)
       namespace: $(params.namespace)
     spec:
       type: image
@@ -39,7 +39,7 @@ spec:
   - apiVersion: tekton.dev/v1alpha1
     kind: PipelineRun
     metadata:
-      name: vote-cicd-$(uid)
+      name: vote-cicd-$(params.gitrepositoryname)-$(uid)
       namespace: $(params.namespace)
     spec:
       pipelineRef:
@@ -48,10 +48,10 @@ spec:
       resources:
       - name: my-source-repo
         resourceRef:
-          name: source-repo-$(uid)
+          name: source-repo-$(params.gitrepositoryname)-$(uid)
       - name: my-image-resource
         resourceRef:
-          name: image-source-$(uid)
+          name: image-source-$(params.gitrepositoryname)-$(uid)
       params:
       - name: deployment-name
         value: $(params.gitrepositoryname)
